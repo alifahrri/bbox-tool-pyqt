@@ -27,6 +27,9 @@ class BBOXWidget(object):
 		for b in bboxes :
 			s = "%s, %s, %s, %s" %(b[0].x(), b[0].y(), b[1].x(), b[1].y())
 			self.ui.bbox_text_edit.append(s)
+		str = self.annotateBoxes(bboxes)
+		for s in str :
+			self.ui.bbox_text_edit.append(s)
 
 	def readImages(self) :
 		self.path = QtWidgets.QFileDialog.getExistingDirectory()
@@ -45,10 +48,20 @@ class BBOXWidget(object):
 		self.showImages(self.current_idx)
 
 	def nextImages(self) :
+		self.saveAnnotation(self.path, self.img.bboxes)
 		self.current_idx = self.current_idx + 1
 		if(self.current_idx >= len(self.files)) :
 			self.current_idx = 0
 		self.showImages(self.current_idx)
+
+	def saveAnnotation(self, path, bboxes) :
+		filename, ext = os.path.splitext(path + '/' + self.files[self.current_idx])
+		path_txt = filename + '.txt'
+		txt = open(path_txt, 'w+')
+		str = self.annotateBoxes(bboxes)
+		for s in str :
+			txt.write(s)
+		print 'save to : %s' %(path_txt) 
 
 	def showImages(self, idx) :
 		self.ui.bbox_text_edit.clear()
@@ -64,6 +77,30 @@ class BBOXWidget(object):
 	def zoomOut(self) :
 		self.ui.graphicsView.scale(0.9,0.9)
 		self.scale *= 0.9
+	
+	def annotateBoxes(self, bboxes, label=0):
+		yolo_str = []
+		for b in bboxes :
+			w = self.img.pxmap.width()
+			h = self.img.pxmap.height()
+			size = (w, h)
+			box = (b[0].x() + w/2, b[0].y() + h/2, b[1].x() + w/2, b[1].y() + h/2)
+			a = self.annotate(size,box)
+			yolo_str.append("%s %s %s %s %s" %(label, a[0], a[1], a[2], a[3]))
+		return yolo_str
+	
+	def annotate(self, size, box) :
+		dw = 1.0 / size[0]
+		dh = 1.0 / size[1]
+		x = (box[0] + box[2]) / 2.0
+		y = (box[1] + box[3]) / 2.0
+		w = box[2] - box[0]
+		h = box[3] - box[1]
+		x *= dw
+		w *= dw
+		y *= dh
+		h *= dh
+		return (x,y,w,h)
 
 	def show(self) :
 		self.form.show()
