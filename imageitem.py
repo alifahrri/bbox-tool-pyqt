@@ -4,14 +4,25 @@ import math
 class ImageItem(QtWidgets.QGraphicsItem) :
 	def __init__(self, parent = None):
 		QtWidgets.QGraphicsItem.__init__(self,parent)
+		self.colors	= [(0,255,0), (0,255,128), (128,255,0), (128,128,128), (128,0,255), \
+					   (255,0,128), (0,0,255), (255,0,0), (255,128,0), (0,255,255)		\
+					   ]
 		self.pxmap = QtGui.QPixmap()
 		self.bboxes = []
+		self.bboxes_class = []
 		self.box_start = QtCore.QPointF()
 		self.box_end = QtCore.QPointF()
 		self.draw_box = False
 		self.bbox_list_callback = None
 		self.setAcceptHoverEvents(True)
 		self.hover_pos = QtCore.QPointF()
+		self.current_class = (0,'')
+	
+	def setClass(self, class_) :
+		self.current_class = class_
+
+	def bboxFromString(self, str) :
+		pass
 
 	def fromFile(self, str) :
 		self.pxmap = QtGui.QPixmap.fromImage(QtGui.QImage(str))
@@ -36,12 +47,21 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 		if(self.draw_box) :
 			painter.setPen(QtGui.QPen(QtGui.QColor(255,0,0)))
 			painter.drawRect(QtCore.QRectF(self.box_start,self.box_end))
-		rects = []
+		# rects = []
 		for box in self.bboxes :
 			rect = QtCore.QRectF(box[0],box[1])
-			rects.append(rect)
-		painter.setPen(QtGui.QPen(QtGui.QColor(0,255,0)))
-		painter.drawRects(rects)
+			class_ = box[2]
+			idx = class_[0]
+			text = class_[1]
+			# rects.append(rect)
+			color = self.colors[idx%10]
+			painter.setPen(QtGui.QPen(QtGui.QColor(color[0],color[1],color[2])))
+			font = QtGui.QFont("ubuntu",6)
+			painter.setFont(font)
+			painter.drawRect(rect)
+			painter.drawText(rect.x(), rect.y(), text)
+		# painter.setPen(QtGui.QPen(QtGui.QColor(0,255,0)))
+		# painter.drawRects(rects)
 
 	def boundingRect(self) :
 		s = self.pxmap.size()
@@ -67,7 +87,13 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 	def mouseReleaseEvent(self, event) :
 		self.draw_box = False
 		if(self.box_start != self.box_end) :
-			self.bboxes.append((self.box_start, self.box_end))
+			x_start = min(self.box_start.x(), self.box_end.x())
+			y_start = min(self.box_start.y(), self.box_end.y())
+			x_end = max(self.box_start.x(), self.box_end.x())
+			y_end = max(self.box_start.y(), self.box_end.y())
+			start = QtCore.QPointF(x_start, y_start)
+			end = QtCore.QPointF(x_end, y_end)
+			self.bboxes.append((start, end, self.current_class))
 		if(self.bbox_list_callback != None) :
 			self.bbox_list_callback(self.bboxes)
 		self.scene().update()
