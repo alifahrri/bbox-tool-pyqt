@@ -11,6 +11,7 @@ class BBOXWidget(object):
 		self.scene = QtWidgets.QGraphicsScene(-300.0,-300.0,600.0,600.0)
 		self.current_idx = 0
 		self.ui.graphicsView.setScene(self.scene)
+		self.ui.clear_btn.clicked.connect(self.clear)
 		self.ui.zoom_in_btn.clicked.connect(self.zoomIn)
 		self.ui.load_btn.clicked.connect(self.readImages)
 		self.ui.next_btn.clicked.connect(self.nextImages)
@@ -23,6 +24,10 @@ class BBOXWidget(object):
 		self.scale = 1.0
 		self.img.bbox_list_callback = self.printBBoxes
 		self.form.setWindowTitle("Bounding Box Tool")
+
+	def clear(self) :
+		self.ui.bbox_text_edit.clear()
+		self.img.clearAll()
 
 	def printBBoxes(self, bboxes) :
 		self.ui.bbox_text_edit.clear()

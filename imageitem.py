@@ -4,7 +4,7 @@ import math
 class ImageItem(QtWidgets.QGraphicsItem) :
 	def __init__(self, parent = None):
 		QtWidgets.QGraphicsItem.__init__(self,parent)
-		self.colors	= [(0,255,0), (0,255,128), (128,255,0), (128,128,128), (128,0,255), \
+		self.colors	= [(0,255,0), (0,255,128), (128,255,0), (255,128,255), (128,0,255), \
 					   (255,0,128), (0,0,255), (255,0,0), (255,128,0), (0,255,255)		\
 					   ]
 		self.pxmap = QtGui.QPixmap()
@@ -17,7 +17,12 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 		self.setAcceptHoverEvents(True)
 		self.hover_pos = QtCore.QPointF()
 		self.current_class = (0,'')
-	
+
+	def clearAll(self) :
+		self.draw_box = False
+		del self.bboxes[:]
+		self.scene().update()
+
 	def setClass(self, class_) :
 		self.current_class = class_
 
