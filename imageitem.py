@@ -41,11 +41,12 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 			y = max(y, -h/2)
 			hover_line_x = QtCore.QLineF(x,-h/2,x,h/2)
 			hover_line_y = QtCore.QLineF(-w/2,y,w/2,y)
-			painter.setPen(QtGui.QPen(QtGui.QColor(0,0,255)))
+			brush = QtGui.QBrush(QtGui.QColor(0,0,0))
+			painter.setPen(QtGui.QPen(brush,0.75,QtCore.Qt.DashLine))
 			painter.drawLine(hover_line_x)
 			painter.drawLine(hover_line_y)
 		if(self.draw_box) :
-			painter.setPen(QtGui.QPen(QtGui.QColor(255,0,0)))
+			painter.setPen(QtGui.QPen(QtGui.QColor(0,0,0)))
 			painter.drawRect(QtCore.QRectF(self.box_start,self.box_end))
 		# rects = []
 		for box in self.bboxes :
