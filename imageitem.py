@@ -58,11 +58,13 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 			hover_line_x = QtCore.QLineF(x,-h/2,x,h/2)
 			hover_line_y = QtCore.QLineF(-w/2,y,w/2,y)
 			brush = QtGui.QBrush(QtGui.QColor(0,0,0))
-			painter.setPen(QtGui.QPen(brush,0.75,QtCore.Qt.DashLine))
+			painter.setPen(QtGui.QPen(brush,0.75*w/320.,QtCore.Qt.DashLine))
 			painter.drawLine(hover_line_x)
 			painter.drawLine(hover_line_y)
 		if(self.draw_box) :
-			painter.setPen(QtGui.QPen(QtGui.QColor(0,0,0)))
+			# painter.setPen(QtGui.QPen(QtGui.QColor(0,0,0)))
+			brush = QtGui.QBrush(QtGui.QColor(0,0,0))
+			painter.setPen(QtGui.QPen(brush,0.75*w/320.,QtCore.Qt.SolidLine))
 			painter.drawRect(QtCore.QRectF(self.box_start,self.box_end))
 		# rects = []
 		for box in self.bboxes :
@@ -72,8 +74,10 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 			text = class_[1]
 			# rects.append(rect)
 			color = self.colors[idx%10]
-			painter.setPen(QtGui.QPen(QtGui.QColor(color[0],color[1],color[2])))
-			font = QtGui.QFont("ubuntu",6)
+			brush = QtGui.QBrush(QtGui.QColor(color[0],color[1],color[2]))
+			painter.setPen(QtGui.QPen(brush,1.0*w/320.,QtCore.Qt.SolidLine))
+			# painter.setPen(QtGui.QPen(QtGui.QColor(color[0],color[1],color[2])))
+			font = QtGui.QFont("ubuntu",6.*w/320.)
 			painter.setFont(font)
 			painter.drawRect(rect)
 			painter.drawText(rect.x(), rect.y(), text)
