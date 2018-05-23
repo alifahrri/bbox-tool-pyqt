@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
     <widget class="QLabel" name="dir_label">
      <property name="sizePolicy">
@@ -190,33 +190,55 @@
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="bbox_groupbox">
-      <property name="title">
-       <string>Bounding Boxes :</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QTextEdit" name="bbox_text_edit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+     <widget class="QWidget" name="">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="bbox_groupbox">
+         <property name="title">
+          <string>Bounding Boxes :</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QTextEdit" name="bbox_text_edit">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="clear_btn">
+            <property name="text">
+             <string>Clear All</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="delete_btn">
-         <property name="text">
-          <string>Delete</string>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Done?</string>
          </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="clear_btn">
-         <property name="text">
-          <string>Clear All</string>
-         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="traint_btn">
+            <property name="text">
+             <string>Create train.txt</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="test_btn">
+            <property name="text">
+             <string>Create test.txt</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
