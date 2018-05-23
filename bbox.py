@@ -17,6 +17,8 @@ class BBOXWidget(object):
 		self.ui.next_btn.clicked.connect(self.nextImages)
 		self.ui.prev_btn.clicked.connect(self.prevImages)
 		self.ui.zoom_out_btn.clicked.connect(self.zoomOut)
+		self.ui.traint_btn.clicked.connect(self.createTrain)
+		self.ui.test_btn.clicked.connect(self.createTest)
 		self.ui.load_names_btn.clicked.connect(self.readNames)
 		self.ui.class_combo.currentIndexChanged.connect(self.setLabel)
 		self.img = imageitem.ImageItem()
@@ -24,7 +26,26 @@ class BBOXWidget(object):
 		self.scale = 1.0
 		self.img.bbox_list_callback = self.printBBoxes
 		self.ui.load_btn.setEnabled(False)
+		self.files = []
 		self.form.setWindowTitle("Bounding Box Tool")
+
+	def createTrain(self) :
+		trains = QtWidgets.QFileDialog.getOpenFileNames()[0]
+		save = QtWidgets.QFileDialog.getSaveFileName()[0]
+		with open(save, 'w+') as f :
+			for file in trains :
+				f.write(file + '\n')
+		# print trains
+		# print save
+
+	def createTest(self) :
+		tests = QtWidgets.QFileDialog.getOpenFileNames()[0]
+		save = QtWidgets.QFileDialog.getSaveFileName()[0]
+		with open(save, 'w+') as f :
+			for file in tests :
+				f.write(file + '\n')
+		# print tests
+		# print save
 
 	def clear(self) :
 		self.ui.bbox_text_edit.clear()
@@ -59,7 +80,13 @@ class BBOXWidget(object):
 
 	def readImages(self) :
 		self.path = QtWidgets.QFileDialog.getExistingDirectory()
-		self.files = os.listdir(self.path)
+		# self.files = os.listdir(self.path)
+		files = os.listdir(self.path)
+		for f in files :
+			file, ext = os.path.splitext(f)
+			print ext
+			if ext == '.jpg' or ext == '.jpeg' :
+				self.files.append(f)
 		self.current_idx = 0
 		self.ui.dir_line_edit.setText(self.path)
 		print("read images : %s" % self.path)
