@@ -16,6 +16,7 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 		self.bbox_list_callback = None
 		self.setAcceptHoverEvents(True)
 		self.hover_pos = QtCore.QPointF()
+		self.label_list = []
 		self.current_class = (0,'')
 
 	def clearAll(self) :
@@ -27,7 +28,17 @@ class ImageItem(QtWidgets.QGraphicsItem) :
 		self.current_class = class_
 
 	def bboxFromString(self, str) :
-		pass
+		val = str.split(' ')
+		class_ = int(val[0])
+		cx = float(val[1])
+		cy = float(val[2])
+		bx = float(val[3])
+		by = float(val[4])
+		imw = self.pxmap.width()
+		imh = self.pxmap.height()
+		spt = QtCore.QPointF((cx-bx/2.)*imw-imw/2.,(cy-by/2.)*imh-imh/2.)
+		ept = QtCore.QPointF((cx+bx/2.)*imw-imw/2.,(cy+by/2.)*imh-imh/2.)
+		self.bboxes.append((spt,ept,(class_,self.label_list[class_])))
 
 	def fromFile(self, str) :
 		self.pxmap = QtGui.QPixmap.fromImage(QtGui.QImage(str))

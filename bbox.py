@@ -23,6 +23,7 @@ class BBOXWidget(object):
 		self.scene.addItem(self.img)
 		self.scale = 1.0
 		self.img.bbox_list_callback = self.printBBoxes
+		self.ui.load_btn.setEnabled(False)
 		self.form.setWindowTitle("Bounding Box Tool")
 
 	def clear(self) :
@@ -33,10 +34,10 @@ class BBOXWidget(object):
 		self.ui.bbox_text_edit.clear()
 		for b in bboxes :
 			s = "%s, %s, %s, %s" %(b[0].x(), b[0].y(), b[1].x(), b[1].y())
-			self.ui.bbox_text_edit.append(s)
+			self.ui.bbox_text_edit.append(s + '\n')
 		str = self.annotateBoxes(bboxes)
 		for s in str :
-			self.ui.bbox_text_edit.append(s)
+			self.ui.bbox_text_edit.append(s + '\n')
 	
 	def setLabel(self) :
 		idx = self.ui.class_combo.currentIndex()
@@ -50,8 +51,11 @@ class BBOXWidget(object):
 		self.ui.names_line_edit.setText(self.names_file[0])
 		with open(self.names_file[0]) as f :
 			for line in f :
-				print line.rstrip()
-				self.ui.class_combo.addItem(line.rstrip())
+				label = line.rstrip()
+				print label
+				self.ui.class_combo.addItem(label)
+				self.img.label_list.append(label)
+		self.ui.load_btn.setEnabled(True)
 
 	def readImages(self) :
 		self.path = QtWidgets.QFileDialog.getExistingDirectory()
@@ -79,14 +83,13 @@ class BBOXWidget(object):
 	def loadAnnotation(self, path) :
 		filename, ext = os.path.splitext(path + '/' + self.files[self.current_idx])
 		path_txt = filename + '.txt'
-		bboxes = []
 		if os.path.isfile(path_txt) :
 			print 'annotation file %s exists' %(path_txt)
 			with open(path_txt) as f :
 				for l in f:
 					print l
-					# box = 
-					# bboxes.append()
+					self.ui.bbox_text_edit.append(l+'\n')
+					self.img.bboxFromString(l)
 		else :
 			print 'annotation file %s does not exist' %(path_txt)
 
@@ -97,7 +100,7 @@ class BBOXWidget(object):
 		idx = self.ui.class_combo.currentIndex()
 		str = self.annotateBoxes(bboxes)
 		for s in str :
-			txt.write(s)
+			txt.write(s + '\n')
 		print 'save to : %s' %(path_txt) 
 
 	def showImages(self, idx) :
